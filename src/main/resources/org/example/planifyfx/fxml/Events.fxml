@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.planifyfx.controller.EventsController">
+   <top>
+      <!-- Navigation Bar -->
+      <HBox alignment="CENTER_LEFT" prefHeight="60.0" style="-fx-background-color: #2c3e50; -fx-padding: 10;">
+         <children>
+            <!-- App Name -->
+            <Label text="Planify" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <!-- Spacer -->
+            <Region HBox.hgrow="ALWAYS" />
+            <!-- Navigation Buttons -->
+            <Button fx:id="dashboardBtn" mnemonicParsing="false" onAction="#showDashboard" text="Dashboard"
+                    style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 4;">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="eventsBtn" mnemonicParsing="false" onAction="#showEvents" text="Events"
+                    style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 4;">
+            </Button>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <VBox spacing="20.0">
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+         <!-- Header with Create Button -->
+         <HBox alignment="CENTER_LEFT" spacing="20.0">
+            <Label text="Events">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="createEventBtn" mnemonicParsing="false" onAction="#createNewEvent" text="+ Create New Event"
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 4;">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+         </HBox>
+         <!-- Events Table -->
+         <TableView fx:id="eventsTable" prefHeight="500.0">
+            <columns>
+               <TableColumn fx:id="idColumn" prefWidth="20.0" text="ID" />
+               <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Event Name" />
+               <TableColumn fx:id="typeColumn" prefWidth="100.0" text="Type" />
+               <TableColumn fx:id="dateColumn" prefWidth="120.0" text="Date" />
+               <TableColumn fx:id="timeColumn" prefWidth="80.0" text="Time" />
+               <TableColumn fx:id="clientColumn" prefWidth="120.0" text="Client" />
+               <TableColumn fx:id="attendanceColumn" prefWidth="80.0" text="Guests" />
+               <TableColumn fx:id="specialDetailsColumn" prefWidth="480.0" text="Special Details" />
+               <TableColumn fx:id="actionsColumn" prefWidth="120.0" text="Actions" />
+            </columns>
+         </TableView>
+      </VBox>
+   </center>
+</BorderPane>
+
+
+
+
