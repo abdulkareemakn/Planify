@@ -69,7 +69,8 @@ mvn javafx:run
 
 ## Project Structure
 
-.
+```
+Planify
 ├── db                                 # The SQLite database file is stored here
 ├── resources                          # Contains screenshots
 ├── LICENSE                            # MIT License
@@ -95,6 +96,7 @@ mvn javafx:run
 │                       ├── db         # Database Schema
 │                       └── fxml       # FXML files
 
+```
 
 ## Technologies Used
 - **Language**: Java 21
@@ -122,4 +124,4 @@ Give a ⭐️ if this project helped you!
 ## 📝 License
 
 Copyright © 2025 [Abdul Kareem](https://github.com/abdulkareemakn).<br />
-This project is [MIT](https://github.com/abdulkareemakn/Planify/LICENSE) licensed.
+This project is [MIT](https://github.com/abdulkareemakn/Planify/blob/main/LICENSE) licensed.
