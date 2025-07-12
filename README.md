@@ -17,6 +17,13 @@
 ### ✨ [Demo](URL)
 
 ## Features
+- Admin Panel for User Login with Password Hashing.
+- Dashboard with statistics. 
+- Quick Links to View/Add Events.
+- View Events page with complete detail of all events.
+- Multiple Event Types Supported with unique fields for each.
+- Creation and Deletion of Events
+- Database driven operations using asynchronous queries.
 
 ## Screenshots
 - Login Page
@@ -41,15 +48,64 @@
 ![Wedding Event Creation](./resources/Wedding_Event.png)
 ## Install
 
+### Prerequisites
+- Java Development Kit (JDK) 21 or higher.
+
+#### 1. Clone the Repository 
+```sh
+git clone https://github.com/abdulkareemakn/Planify
+cd Planify
+```
+
+#### 2. Built the Project
 ```sh
 mvn clean install
 ```
 
-## Usage
-
+#### Run the Application
 ```sh
 mvn javafx:run
 ```
+
+## Project Structure
+
+.
+├── db                                 # The SQLite database file is stored here
+├── resources                          # Contains screenshots
+├── LICENSE                            # MIT License
+├── mvnw
+├── mvnw.cmd
+├── pom.xml                            # Maven Build File
+├── README.md
+├── src
+│   └── main
+│       ├── java
+│       │   └── org
+│       │       └── example
+│       │           └── planifyfx
+│       │               ├── controller  # Controller Classes (EventController, DashboardController)
+│       │               ├── deps        # Dependencies (DBFX-Framework)
+│       │               ├── model       # Model Classes (Event, Client)
+│       │               ├── repository  # DAO Classes for Database Integration
+│       │               └── util        # Utility Classes (Statistics, SceneManager)
+│       └── resources
+│           └── org
+│               └── example
+│                   └── planifyfx
+│                       ├── db         # Database Schema
+│                       └── fxml       # FXML files
+
+
+## Technologies Used
+- **Language**: Java 21
+- **Framework**: JavaFX
+- **Styling**: JavaFX CSS
+- **Build Tool**: Maven
+- **Database**: SQLite
+- **OOP Concepts**: Encapsulation, Abstraction, Inheritance, Generics
+
+## Credits
+This project uses the [DBFX-Framework](https://github.com/WaqarAhmad321/dbfx-framework) created by [Waqar Ahmad](https://github.com/WaqarAhmad321). The majority of the database operations were done using this framework. Do check it out.
 
 ## Author
 
@@ -66,7 +122,4 @@ Give a ⭐️ if this project helped you!
 ## 📝 License
 
 Copyright © 2025 [Abdul Kareem](https://github.com/abdulkareemakn).<br />
-This project is [MIT](URL) licensed.
-
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+This project is [MIT](https://github.com/abdulkareemakn/Planify/LICENSE) licensed.
