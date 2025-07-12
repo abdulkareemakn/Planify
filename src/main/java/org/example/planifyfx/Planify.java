@@ -25,8 +25,8 @@ public class Planify extends Application {
         SceneManager.getInstance().setPrimaryStage(stage);
 
         stage.setTitle("Planify");
-        stage.setWidth(1366);
-        stage.setHeight(768);
+        stage.setWidth(1920);
+        stage.setHeight(1080);
 
         SceneManager.getInstance().switchScene("LoginPage.fxml");
     }

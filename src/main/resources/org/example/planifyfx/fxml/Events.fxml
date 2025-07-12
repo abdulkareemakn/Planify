@@ -54,7 +54,7 @@
          <TableView fx:id="eventsTable" prefHeight="500.0">
             <columns>
                <TableColumn fx:id="idColumn" prefWidth="20.0" text="ID" />
-               <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Event Name" />
+               <TableColumn fx:id="nameColumn" prefWidth="250.0" text="Event Name" />
                <TableColumn fx:id="typeColumn" prefWidth="100.0" text="Type" />
                <TableColumn fx:id="dateColumn" prefWidth="120.0" text="Date" />
                <TableColumn fx:id="timeColumn" prefWidth="80.0" text="Time" />
