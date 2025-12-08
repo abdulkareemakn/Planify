@@ -95,16 +95,43 @@ public class EventsController implements Initializable {
             }
         });
 
+        // Custom cell factory for event type badge
+        typeColumn.setCellFactory(column -> new TableCell<>() {
+            private final Label badge = new Label();
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    badge.setText(item);
+                    String styleClass = switch (item) {
+                        case "Wedding" -> "badge-wedding";
+                        case "Birthday" -> "badge-birthday";
+                        case "Seminar" -> "badge-seminar";
+                        default -> "";
+                    };
+                    badge.getStyleClass().clear();
+                    badge.getStyleClass().add(styleClass);
+                    setGraphic(badge);
+                }
+            }
+        });
+
         // Custom cell factory for action buttons
         actionsColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button editBtn = new Button("Edit");
             private final Button deleteBtn = new Button("Delete");
-            private final HBox buttonBox = new HBox(5);
+            private final HBox buttonBox = new HBox(8);
 
             {
-                deleteBtn.setStyle("-fx-background-color: #EF4444; -fx-text-fill: white; -fx-padding: 4 12; -fx-background-radius: 4; -fx-cursor: hand;");
+                editBtn.getStyleClass().add("btn-edit");
+                deleteBtn.getStyleClass().add("btn-delete");
+                editBtn.setOnAction(e -> editEvent(getTableView().getItems().get(getIndex())));
                 deleteBtn.setOnAction(e -> deleteEvent(getTableView().getItems().get(getIndex())));
                 buttonBox.setAlignment(Pos.CENTER);
-                buttonBox.getChildren().addAll(deleteBtn);
+                buttonBox.getChildren().addAll(editBtn, deleteBtn);
             }
 
             @Override
@@ -187,7 +214,12 @@ public class EventsController implements Initializable {
         }
 
         alert.setContentText(details.toString());
-        alert.getDialogPane().setMinWidth(400);
+        
+        // Style the dialog
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/org/example/planifyfx/styles.css").toExternalForm());
+        dialogPane.setMinWidth(420);
+        
         alert.showAndWait();
     }
 
@@ -212,16 +244,48 @@ public class EventsController implements Initializable {
     }
 
     /**
+     * Opens the edit screen for an event.
+     * TODO: Implement full edit functionality
+     */
+    private void editEvent(EventTableRow eventRow) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Edit Event");
+        alert.setHeaderText("Edit: " + eventRow.getName());
+        alert.setContentText("Edit functionality coming soon!\n\nFor now, you can delete and recreate the event.");
+        
+        // Style the dialog
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/org/example/planifyfx/styles.css").toExternalForm());
+        dialogPane.setMinWidth(350);
+        
+        alert.showAndWait();
+    }
+
+    /**
      * Deletes an event after user confirmation.
      */
     private void deleteEvent(EventTableRow eventRow) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete Event");
-        alert.setHeaderText("Delete Event: " + eventRow.getName());
-        alert.setContentText("Are you sure you want to delete this event? This action cannot be undone.");
+        alert.setHeaderText("Delete \"" + eventRow.getName() + "\"?");
+        alert.setContentText("This action cannot be undone. The event and all its data will be permanently removed.");
+
+        // Style the dialog
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/org/example/planifyfx/styles.css").toExternalForm());
+        dialogPane.setMinWidth(400);
+
+        // Customize buttons
+        ButtonType deleteButton = new ButtonType("Delete", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(deleteButton, cancelButton);
+
+        // Style the delete button red
+        Button deleteBtn = (Button) dialogPane.lookupButton(deleteButton);
+        deleteBtn.setStyle("-fx-background-color: #EF4444; -fx-text-fill: white; -fx-font-weight: bold;");
 
         alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
+            if (response == deleteButton) {
                 EventRepository.deleteById(
                     eventRow.getId(),
                     () -> {
@@ -247,6 +311,12 @@ public class EventsController implements Initializable {
         alert.setTitle("Error");
         alert.setHeaderText(title);
         alert.setContentText(message);
+        
+        // Style the dialog
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/org/example/planifyfx/styles.css").toExternalForm());
+        dialogPane.setMinWidth(400);
+        
         alert.showAndWait();
     }
 
