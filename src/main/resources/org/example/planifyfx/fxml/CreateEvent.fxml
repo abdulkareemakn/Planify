@@ -7,194 +7,236 @@
 <?import java.lang.String?>
 <?import javafx.collections.FXCollections?>
 
-<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.planifyfx.controller.CreateEventController">
-   <top>
-      <!-- Navigation Bar -->
-      <HBox alignment="CENTER_LEFT" prefHeight="60.0" style="-fx-background-color: #2c3e50; -fx-padding: 10;">
-         <children>
-            <!-- App Name -->
-            <Label text="Planify" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.planifyfx.controller.CreateEventController"
+            style="-fx-background-color: #F8FAFC;">
+
+    <!-- Top Navigation Bar -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-background-color: #1E293B; -fx-padding: 16 24;">
+            <!-- Brand -->
+            <Label text="Planify" style="-fx-text-fill: white;">
+                <font>
+                    <Font name="System Bold" size="18"/>
+                </font>
             </Label>
 
-            <!-- Spacer -->
-            <Region HBox.hgrow="ALWAYS" />
+            <Region HBox.hgrow="ALWAYS"/>
 
-            <!-- Navigation Buttons -->
-            <Button fx:id="dashboardBtn" mnemonicParsing="false" onAction="#showDashboard" text="Dashboard"
-                    style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 4;">
-               <HBox.margin>
-                  <Insets right="10.0" />
-               </HBox.margin>
+            <!-- Navigation -->
+            <Button fx:id="dashboardBtn" text="Dashboard" onAction="#showDashboard"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 6; -fx-cursor: hand;">
+                <font>
+                    <Font size="13"/>
+                </font>
             </Button>
 
-            <Button fx:id="eventsBtn" mnemonicParsing="false" onAction="#showEvents" text="Events"
-                    style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 4;">
+            <Button fx:id="eventsBtn" text="Events" onAction="#showEvents"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 6; -fx-cursor: hand;">
+                <font>
+                    <Font size="13"/>
+                </font>
             </Button>
-         </children>
-      </HBox>
-   </top>
+        </HBox>
+    </top>
 
-   <center>
-      <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
-         <content>
-            <VBox spacing="20.0">
-               <padding>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </padding>
+    <!-- Main Content -->
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: #F8FAFC;">
+            <VBox spacing="24" style="-fx-padding: 32;">
 
-               <!-- Header -->
-               <HBox alignment="CENTER_LEFT" spacing="20.0">
-                  <Label fx:id="pageTitle" text="Create New Event">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                  </Label>
+                <!-- Page Header -->
+                <HBox alignment="CENTER_LEFT" spacing="16">
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label fx:id="pageTitle" text="Create New Event" style="-fx-text-fill: #1E293B;">
+                            <font>
+                                <Font name="System Bold" size="24"/>
+                            </font>
+                        </Label>
+                        <Label text="Fill in the details below" style="-fx-text-fill: #64748B;">
+                            <font>
+                                <Font size="14"/>
+                            </font>
+                        </Label>
+                    </VBox>
 
-                  <Region HBox.hgrow="ALWAYS" />
-
-                  <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancel" text="Cancel"
-                          style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 4;" />
-
-                  <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveEvent" text="Save Event"
-                          style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 4;">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Button>
-               </HBox>
-
-               <!-- Form -->
-               <VBox spacing="20.0" style="-fx-background-color: #f8f9fa; -fx-padding: 20; -fx-background-radius: 8;">
-
-                  <!-- Event Type Selection -->
-                  <VBox spacing="8.0">
-                     <Label text="Event Type *">
+                    <Button fx:id="cancelBtn" text="Cancel" onAction="#cancel"
+                            style="-fx-background-color: #FFFFFF; -fx-text-fill: #64748B; -fx-padding: 10 20; -fx-background-radius: 6; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-cursor: hand;">
                         <font>
-                           <Font name="System Bold" size="14.0" />
+                            <Font size="13"/>
                         </font>
-                     </Label>
-                     <ComboBox fx:id="eventTypeCombo" prefWidth="200.0" promptText="Select event type">
-                        <items>
-                           <FXCollections fx:factory="observableArrayList">
-                              <String fx:value="Wedding" />
-                              <String fx:value="Birthday" />
-                              <String fx:value="Seminar" />
-                           </FXCollections>
-                        </items>
-                     </ComboBox>
-                  </VBox>
+                    </Button>
 
-                  <!-- Common Event Fields -->
-                  <VBox spacing="15.0">
-                     <Label text="Event Details">
+                    <Button fx:id="saveBtn" text="Save Event" onAction="#saveEvent"
+                            style="-fx-background-color: #10B981; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 6; -fx-cursor: hand;">
                         <font>
-                           <Font name="System Bold" size="16.0" />
+                            <Font name="System Bold" size="13"/>
                         </font>
-                     </Label>
+                    </Button>
+                </HBox>
 
-                     <GridPane hgap="15.0" vgap="10.0">
-                        <columnConstraints>
-                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        </columnConstraints>
+                <!-- Form Card -->
+                <VBox spacing="24"
+                      style="-fx-background-color: #FFFFFF; -fx-padding: 24; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);">
 
-                        <Label text="Event Name *" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <TextField fx:id="eventNameField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <!-- Event Type Selection -->
+                    <VBox spacing="8">
+                        <Label text="Event Type" style="-fx-text-fill: #1E293B;">
+                            <font>
+                                <Font name="System Bold" size="13"/>
+                            </font>
+                        </Label>
+                        <ComboBox fx:id="eventTypeCombo" prefWidth="250" promptText="Select event type"
+                                  style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6;">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Wedding"/>
+                                    <String fx:value="Birthday"/>
+                                    <String fx:value="Seminar"/>
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                    </VBox>
 
-                        <Label text="Date *" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <DatePicker fx:id="eventDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <Separator style="-fx-background-color: #F1F5F9;"/>
 
-                        <Label text="Time *" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <HBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                           <ComboBox fx:id="hourCombo" promptText="Hour" prefWidth="70.0">
-                              <items>
-                                 <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="00" />
-                                    <String fx:value="01" />
-                                    <String fx:value="02" />
-                                    <String fx:value="03" />
-                                    <String fx:value="04" />
-                                    <String fx:value="05" />
-                                    <String fx:value="06" />
-                                    <String fx:value="07" />
-                                    <String fx:value="08" />
-                                    <String fx:value="09" />
-                                    <String fx:value="10" />
-                                    <String fx:value="11" />
-                                    <String fx:value="12" />
-                                    <String fx:value="13" />
-                                    <String fx:value="14" />
-                                    <String fx:value="15" />
-                                    <String fx:value="16" />
-                                    <String fx:value="17" />
-                                    <String fx:value="18" />
-                                    <String fx:value="19" />
-                                    <String fx:value="20" />
-                                    <String fx:value="21" />
-                                    <String fx:value="22" />
-                                    <String fx:value="23" />
-                                 </FXCollections>
-                              </items>
-                           </ComboBox>
-                           <Label text=":" />
-                           <ComboBox fx:id="minuteCombo" promptText="Min" prefWidth="70.0">
-                              <items>
-                                 <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="00" />
-                                    <String fx:value="15" />
-                                    <String fx:value="30" />
-                                    <String fx:value="45" />
-                                 </FXCollections>
-                              </items>
-                           </ComboBox>
-                        </HBox>
+                    <!-- Event Details Section -->
+                    <VBox spacing="16">
+                        <Label text="Event Details" style="-fx-text-fill: #1E293B;">
+                            <font>
+                                <Font name="System Bold" size="15"/>
+                            </font>
+                        </Label>
 
-                        <Label text="Expected Attendance *" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                        <TextField fx:id="attendanceField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <GridPane hgap="24" vgap="16">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                            </columnConstraints>
 
-                        <Label text="Venue" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                        <ComboBox fx:id="venueCombo" promptText="Select venue (optional)" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                     </GridPane>
-                  </VBox>
+                            <!-- Row 0: Event Name -->
+                            <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2">
+                                <Label text="Event Name" style="-fx-text-fill: #1E293B;">
+                                    <font><Font name="System Bold" size="13"/></font>
+                                </Label>
+                                <TextField fx:id="eventNameField" promptText="Enter event name"
+                                           style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 10;"/>
+                            </VBox>
 
-                  <!-- Client Information -->
-                  <VBox spacing="15.0">
-                     <Label text="Client Information">
-                        <font>
-                           <Font name="System Bold" size="16.0" />
-                        </font>
-                     </Label>
+                            <!-- Row 1: Date and Time -->
+                            <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                <Label text="Date" style="-fx-text-fill: #1E293B;">
+                                    <font><Font name="System Bold" size="13"/></font>
+                                </Label>
+                                <DatePicker fx:id="eventDatePicker" promptText="Select date" maxWidth="Infinity"
+                                            style="-fx-background-color: #FFFFFF;"/>
+                            </VBox>
 
-                     <GridPane hgap="15.0" vgap="10.0">
-                        <columnConstraints>
-                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        </columnConstraints>
+                            <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                <Label text="Time" style="-fx-text-fill: #1E293B;">
+                                    <font><Font name="System Bold" size="13"/></font>
+                                </Label>
+                                <HBox spacing="8" alignment="CENTER_LEFT">
+                                    <ComboBox fx:id="hourCombo" promptText="Hour" prefWidth="80"
+                                              style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6;">
+                                        <items>
+                                            <FXCollections fx:factory="observableArrayList">
+                                                <String fx:value="00"/><String fx:value="01"/><String fx:value="02"/>
+                                                <String fx:value="03"/><String fx:value="04"/><String fx:value="05"/>
+                                                <String fx:value="06"/><String fx:value="07"/><String fx:value="08"/>
+                                                <String fx:value="09"/><String fx:value="10"/><String fx:value="11"/>
+                                                <String fx:value="12"/><String fx:value="13"/><String fx:value="14"/>
+                                                <String fx:value="15"/><String fx:value="16"/><String fx:value="17"/>
+                                                <String fx:value="18"/><String fx:value="19"/><String fx:value="20"/>
+                                                <String fx:value="21"/><String fx:value="22"/><String fx:value="23"/>
+                                            </FXCollections>
+                                        </items>
+                                    </ComboBox>
+                                    <Label text=":" style="-fx-text-fill: #64748B; -fx-font-size: 16;"/>
+                                    <ComboBox fx:id="minuteCombo" promptText="Min" prefWidth="80"
+                                              style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6;">
+                                        <items>
+                                            <FXCollections fx:factory="observableArrayList">
+                                                <String fx:value="00"/><String fx:value="15"/>
+                                                <String fx:value="30"/><String fx:value="45"/>
+                                            </FXCollections>
+                                        </items>
+                                    </ComboBox>
+                                </HBox>
+                            </VBox>
 
-                        <Label text="Client Name *" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <TextField fx:id="clientNameField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            <!-- Row 2: Attendance and Venue -->
+                            <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                                <Label text="Expected Attendance" style="-fx-text-fill: #1E293B;">
+                                    <font><Font name="System Bold" size="13"/></font>
+                                </Label>
+                                <TextField fx:id="attendanceField" promptText="Number of guests"
+                                           style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 10;"/>
+                            </VBox>
 
-                        <Label text="Email Address *" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <TextField fx:id="clientEmailField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                <Label text="Venue (Optional)" style="-fx-text-fill: #1E293B;">
+                                    <font><Font name="System Bold" size="13"/></font>
+                                </Label>
+                                <ComboBox fx:id="venueCombo" promptText="Select venue" maxWidth="Infinity"
+                                          style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6;"/>
+                            </VBox>
+                        </GridPane>
+                    </VBox>
 
-                        <Label text="Phone Number *" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <TextField fx:id="clientPhoneField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                     </GridPane>
-                  </VBox>
+                    <Separator style="-fx-background-color: #F1F5F9;"/>
 
-                  <!-- Dynamic Event Type Fields -->
-                  <VBox fx:id="dynamicFieldsContainer" spacing="15.0">
-                     <!-- Wedding fields will be added here dynamically -->
-                     <!-- Birthday fields will be added here dynamically -->
-                  </VBox>
+                    <!-- Client Information Section -->
+                    <VBox spacing="16">
+                        <Label text="Client Information" style="-fx-text-fill: #1E293B;">
+                            <font>
+                                <Font name="System Bold" size="15"/>
+                            </font>
+                        </Label>
 
-               </VBox>
+                        <GridPane hgap="24" vgap="16">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                            </columnConstraints>
+
+                            <!-- Row 0: Client Name -->
+                            <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2">
+                                <Label text="Client Name" style="-fx-text-fill: #1E293B;">
+                                    <font><Font name="System Bold" size="13"/></font>
+                                </Label>
+                                <TextField fx:id="clientNameField" promptText="Enter client name"
+                                           style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 10;"/>
+                            </VBox>
+
+                            <!-- Row 1: Email and Phone -->
+                            <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                <Label text="Email Address" style="-fx-text-fill: #1E293B;">
+                                    <font><Font name="System Bold" size="13"/></font>
+                                </Label>
+                                <TextField fx:id="clientEmailField" promptText="client@example.com"
+                                           style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 10;"/>
+                            </VBox>
+
+                            <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                <Label text="Phone Number" style="-fx-text-fill: #1E293B;">
+                                    <font><Font name="System Bold" size="13"/></font>
+                                </Label>
+                                <TextField fx:id="clientPhoneField" promptText="+1 234 567 8900"
+                                           style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 10;"/>
+                            </VBox>
+                        </GridPane>
+                    </VBox>
+
+                    <!-- Dynamic Event Type Fields Container -->
+                    <VBox fx:id="dynamicFieldsContainer" spacing="16">
+                        <!-- Wedding/Birthday/Seminar fields added dynamically -->
+                    </VBox>
+
+                </VBox>
 
             </VBox>
-         </content>
-      </ScrollPane>
-   </center>
+        </ScrollPane>
+    </center>
+
 </BorderPane>

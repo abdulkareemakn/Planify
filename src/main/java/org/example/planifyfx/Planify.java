@@ -17,6 +17,9 @@ import java.sql.Statement;
  */
 public class Planify extends Application {
 
+    // Set to false to skip login during development
+    private static final boolean AUTH_ENABLED = false;
+
     @Override
     public void start(Stage stage) throws IOException {
         // Initialize the SceneManager with the primary stage
@@ -27,8 +30,12 @@ public class Planify extends Application {
         stage.setWidth(1280);
         stage.setHeight(720);
 
-        // Start with the login page
-        SceneManager.getInstance().switchScene("LoginPage.fxml");
+        // Start with login page or dashboard based on auth setting
+        if (AUTH_ENABLED) {
+            SceneManager.getInstance().switchScene("LoginPage.fxml");
+        } else {
+            SceneManager.getInstance().switchScene("Dashboard.fxml");
+        }
     }
 
     public static void main(String[] args) {

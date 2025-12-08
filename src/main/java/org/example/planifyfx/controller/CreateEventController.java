@@ -183,100 +183,174 @@ public class CreateEventController implements Initializable {
     }
 
     private void showWeddingFields() {
+        Separator separator = new Separator();
+        separator.setStyle("-fx-background-color: #F1F5F9;");
+
         Label sectionLabel = new Label("Wedding Details");
-        sectionLabel.setFont(Font.font("System Bold", 16.0));
+        sectionLabel.setFont(Font.font("System Bold", 15.0));
+        sectionLabel.setStyle("-fx-text-fill: #1E293B;");
 
         GridPane grid = new GridPane();
-        grid.setHgap(15.0);
-        grid.setVgap(10.0);
+        grid.setHgap(24.0);
+        grid.setVgap(16.0);
 
         ColumnConstraints col1 = new ColumnConstraints();
         ColumnConstraints col2 = new ColumnConstraints();
-        col1.setHgrow(Priority.SOMETIMES);
-        col2.setHgrow(Priority.SOMETIMES);
+        col1.setHgrow(Priority.ALWAYS);
+        col2.setHgrow(Priority.ALWAYS);
         grid.getColumnConstraints().addAll(col1, col2);
 
-        grid.add(new Label("Bride Name *"), 0, 0);
+        // Bride Name
+        VBox brideBox = new VBox(6);
+        Label brideLabel = new Label("Bride Name");
+        brideLabel.setFont(Font.font("System Bold", 13.0));
+        brideLabel.setStyle("-fx-text-fill: #1E293B;");
         brideNameField = new TextField();
-        grid.add(brideNameField, 1, 0);
+        brideNameField.setPromptText("Enter bride's name");
+        brideNameField.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 10;");
+        brideBox.getChildren().addAll(brideLabel, brideNameField);
+        grid.add(brideBox, 0, 0);
 
-        grid.add(new Label("Groom Name *"), 0, 1);
+        // Groom Name
+        VBox groomBox = new VBox(6);
+        Label groomLabel = new Label("Groom Name");
+        groomLabel.setFont(Font.font("System Bold", 13.0));
+        groomLabel.setStyle("-fx-text-fill: #1E293B;");
         groomNameField = new TextField();
-        grid.add(groomNameField, 1, 1);
+        groomNameField.setPromptText("Enter groom's name");
+        groomNameField.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 10;");
+        groomBox.getChildren().addAll(groomLabel, groomNameField);
+        grid.add(groomBox, 1, 0);
 
-        grid.add(new Label("Photographer Required"), 0, 2);
-        photographerCheckBox = new CheckBox();
-        grid.add(photographerCheckBox, 1, 2);
+        // Photographer Required
+        VBox photoBox = new VBox(6);
+        Label photoLabel = new Label("Photographer Required");
+        photoLabel.setFont(Font.font("System Bold", 13.0));
+        photoLabel.setStyle("-fx-text-fill: #1E293B;");
+        photographerCheckBox = new CheckBox("Yes, include photographer");
+        photographerCheckBox.setStyle("-fx-text-fill: #64748B;");
+        photoBox.getChildren().addAll(photoLabel, photographerCheckBox);
+        grid.add(photoBox, 0, 1);
 
-        dynamicFieldsContainer.getChildren().addAll(sectionLabel, grid);
+        dynamicFieldsContainer.getChildren().addAll(separator, sectionLabel, grid);
     }
 
     private void showBirthdayFields() {
+        Separator separator = new Separator();
+        separator.setStyle("-fx-background-color: #F1F5F9;");
+
         Label sectionLabel = new Label("Birthday Details");
-        sectionLabel.setFont(Font.font("System Bold", 16.0));
+        sectionLabel.setFont(Font.font("System Bold", 15.0));
+        sectionLabel.setStyle("-fx-text-fill: #1E293B;");
 
         GridPane grid = new GridPane();
-        grid.setHgap(15.0);
-        grid.setVgap(10.0);
+        grid.setHgap(24.0);
+        grid.setVgap(16.0);
 
         ColumnConstraints col1 = new ColumnConstraints();
         ColumnConstraints col2 = new ColumnConstraints();
-        col1.setHgrow(Priority.SOMETIMES);
-        col2.setHgrow(Priority.SOMETIMES);
+        col1.setHgrow(Priority.ALWAYS);
+        col2.setHgrow(Priority.ALWAYS);
         grid.getColumnConstraints().addAll(col1, col2);
 
-        grid.add(new Label("Age *"), 0, 0);
+        // Age
+        VBox ageBox = new VBox(6);
+        Label ageLabel = new Label("Age");
+        ageLabel.setFont(Font.font("System Bold", 13.0));
+        ageLabel.setStyle("-fx-text-fill: #1E293B;");
         ageField = new TextField();
+        ageField.setPromptText("Enter age");
+        ageField.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 10;");
         ageField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal.matches("\\d*")) {
                 ageField.setText(newVal.replaceAll("[^\\d]", ""));
             }
         });
-        grid.add(ageField, 1, 0);
+        ageBox.getChildren().addAll(ageLabel, ageField);
+        grid.add(ageBox, 0, 0);
 
-        grid.add(new Label("Theme"), 0, 1);
+        // Theme
+        VBox themeBox = new VBox(6);
+        Label themeLabel = new Label("Theme");
+        themeLabel.setFont(Font.font("System Bold", 13.0));
+        themeLabel.setStyle("-fx-text-fill: #1E293B;");
         themeField = new TextField();
-        grid.add(themeField, 1, 1);
+        themeField.setPromptText("e.g., Superhero, Princess");
+        themeField.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 10;");
+        themeBox.getChildren().addAll(themeLabel, themeField);
+        grid.add(themeBox, 1, 0);
 
-        grid.add(new Label("Number of Kids"), 0, 2);
+        // Number of Kids
+        VBox kidsBox = new VBox(6);
+        Label kidsLabel = new Label("Number of Kids");
+        kidsLabel.setFont(Font.font("System Bold", 13.0));
+        kidsLabel.setStyle("-fx-text-fill: #1E293B;");
         numberOfKidsField = new TextField();
+        numberOfKidsField.setPromptText("Enter number");
+        numberOfKidsField.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 10;");
         numberOfKidsField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal.matches("\\d*")) {
                 numberOfKidsField.setText(newVal.replaceAll("[^\\d]", ""));
             }
         });
-        grid.add(numberOfKidsField, 1, 2);
+        kidsBox.getChildren().addAll(kidsLabel, numberOfKidsField);
+        grid.add(kidsBox, 0, 1);
 
-        dynamicFieldsContainer.getChildren().addAll(sectionLabel, grid);
+        dynamicFieldsContainer.getChildren().addAll(separator, sectionLabel, grid);
     }
 
     private void showSeminarFields() {
+        Separator separator = new Separator();
+        separator.setStyle("-fx-background-color: #F1F5F9;");
+
         Label sectionLabel = new Label("Seminar Details");
-        sectionLabel.setFont(Font.font("System Bold", 16.0));
+        sectionLabel.setFont(Font.font("System Bold", 15.0));
+        sectionLabel.setStyle("-fx-text-fill: #1E293B;");
 
         GridPane grid = new GridPane();
-        grid.setHgap(15.0);
-        grid.setVgap(10.0);
+        grid.setHgap(24.0);
+        grid.setVgap(16.0);
 
         ColumnConstraints col1 = new ColumnConstraints();
         ColumnConstraints col2 = new ColumnConstraints();
-        col1.setHgrow(Priority.SOMETIMES);
-        col2.setHgrow(Priority.SOMETIMES);
+        col1.setHgrow(Priority.ALWAYS);
+        col2.setHgrow(Priority.ALWAYS);
         grid.getColumnConstraints().addAll(col1, col2);
 
-        grid.add(new Label("Chief Guest *"), 0, 0);
+        // Chief Guest
+        VBox chiefGuestBox = new VBox(6);
+        Label chiefGuestLabel = new Label("Chief Guest");
+        chiefGuestLabel.setFont(Font.font("System Bold", 13.0));
+        chiefGuestLabel.setStyle("-fx-text-fill: #1E293B;");
         chiefGuestField = new TextField();
-        grid.add(chiefGuestField, 1, 0);
+        chiefGuestField.setPromptText("Enter chief guest name");
+        chiefGuestField.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 10;");
+        chiefGuestBox.getChildren().addAll(chiefGuestLabel, chiefGuestField);
+        grid.add(chiefGuestBox, 0, 0);
 
-        grid.add(new Label("Speaker *"), 0, 1);
+        // Speaker
+        VBox speakerBox = new VBox(6);
+        Label speakerLabel = new Label("Speaker");
+        speakerLabel.setFont(Font.font("System Bold", 13.0));
+        speakerLabel.setStyle("-fx-text-fill: #1E293B;");
         speakerField = new TextField();
-        grid.add(speakerField, 1, 1);
+        speakerField.setPromptText("Enter speaker name");
+        speakerField.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 10;");
+        speakerBox.getChildren().addAll(speakerLabel, speakerField);
+        grid.add(speakerBox, 1, 0);
 
-        grid.add(new Label("Topic *"), 0, 2);
+        // Topic
+        VBox topicBox = new VBox(6);
+        Label topicLabel = new Label("Topic");
+        topicLabel.setFont(Font.font("System Bold", 13.0));
+        topicLabel.setStyle("-fx-text-fill: #1E293B;");
         topicField = new TextField();
-        grid.add(topicField, 1, 2);
+        topicField.setPromptText("Enter seminar topic");
+        topicField.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 10;");
+        topicBox.getChildren().addAll(topicLabel, topicField);
+        grid.add(topicBox, 0, 1, 2, 1);
 
-        dynamicFieldsContainer.getChildren().addAll(sectionLabel, grid);
+        dynamicFieldsContainer.getChildren().addAll(separator, sectionLabel, grid);
     }
 
     @FXML
@@ -328,23 +402,36 @@ public class CreateEventController implements Initializable {
     @FXML
     private void saveEvent() {
         if (validateForm()) {
-            try {
-                if (editingEventId == null) {
-                    createNewEvent();
-                } else {
-                    updateEvent();
-                }
-
-                showAlert("Success", "Event saved successfully!", Alert.AlertType.INFORMATION);
-
-                SceneManager.getInstance().switchScene("Events.fxml");
-                System.out.println("Event saved successfully");
-
-            } catch (Exception e) {
-                showAlert("Error", "Failed to save event: " + e.getMessage(), Alert.AlertType.ERROR);
-                e.printStackTrace();
+            // Disable save button to prevent double-clicks
+            saveBtn.setDisable(true);
+            saveBtn.setText("Saving...");
+            
+            if (editingEventId == null) {
+                createNewEvent();
+            } else {
+                updateEvent();
             }
         }
+    }
+
+    /**
+     * Called when event is saved successfully.
+     */
+    private void onSaveSuccess() {
+        saveBtn.setDisable(false);
+        saveBtn.setText("Save Event");
+        showAlert("Success", "Event saved successfully!", Alert.AlertType.INFORMATION);
+        SceneManager.getInstance().switchScene("Events.fxml");
+    }
+
+    /**
+     * Called when event save fails.
+     */
+    private void onSaveError(Throwable error) {
+        saveBtn.setDisable(false);
+        saveBtn.setText("Save Event");
+        showAlert("Error", "Failed to save event: " + error.getMessage(), Alert.AlertType.ERROR);
+        error.printStackTrace();
     }
 
     private boolean validateForm() {
@@ -498,9 +585,9 @@ public class CreateEventController implements Initializable {
                         brideName, groomName, photographerRequired);
                 wedding.setVenue(selectedVenue);
                 EventRepository.save(wedding,
-                        () -> System.out.println("Wedding event saved successfully"),
-                        Throwable::printStackTrace);
-            }, Throwable::printStackTrace);
+                        () -> onSaveSuccess(),
+                        error -> onSaveError(error));
+            }, error -> onSaveError(error));
 
         } else if ("Birthday".equals(eventType)) {
             int age = Integer.parseInt(ageField.getText().trim());
@@ -525,9 +612,9 @@ public class CreateEventController implements Initializable {
                         age, theme, finalNumberOfKids);
                 birthday.setVenue(selectedVenue);
                 EventRepository.save(birthday,
-                        () -> System.out.println("Birthday event saved successfully"),
-                        Throwable::printStackTrace);
-            }, Throwable::printStackTrace);
+                        () -> onSaveSuccess(),
+                        error -> onSaveError(error));
+            }, error -> onSaveError(error));
 
         } else if ("Seminar".equals(eventType)) {
             String chiefGuest = chiefGuestField.getText().trim();
@@ -546,9 +633,9 @@ public class CreateEventController implements Initializable {
                         chiefGuest, speaker, topic);
                 seminar.setVenue(selectedVenue);
                 EventRepository.save(seminar,
-                        () -> System.out.println("Seminar event saved successfully"),
-                        Throwable::printStackTrace);
-            }, Throwable::printStackTrace);
+                        () -> onSaveSuccess(),
+                        error -> onSaveError(error));
+            }, error -> onSaveError(error));
         }
     }
 

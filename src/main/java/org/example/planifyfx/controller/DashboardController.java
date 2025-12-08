@@ -91,8 +91,8 @@ public class DashboardController implements Initializable {
      * Updates the visual style of navigation buttons to show which is active.
      */
     private void setActiveNavButton(Button activeButton) {
-        String inactiveStyle = "-fx-background-color: #34495e; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 4;";
-        String activeStyle = "-fx-background-color: #2980b9; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 4;";
+        String inactiveStyle = "-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 6; -fx-cursor: hand;";
+        String activeStyle = "-fx-background-color: #3B82F6; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 6; -fx-cursor: hand;";
         
         dashboardBtn.setStyle(inactiveStyle);
         eventsBtn.setStyle(inactiveStyle);

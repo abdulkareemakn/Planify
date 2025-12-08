@@ -8,7 +8,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
 import org.example.planifyfx.util.Authentication;
 import org.example.planifyfx.util.SceneManager;
 
@@ -111,7 +110,7 @@ public class ResetPasswordController implements Initializable {
 
     private void showMessage(String message, boolean isSuccess) {
         messageLabel.setText(message);
-        messageLabel.setTextFill(isSuccess ? Color.GREEN : Color.RED);
+        messageLabel.setStyle(isSuccess ? "-fx-text-fill: #10B981;" : "-fx-text-fill: #EF4444;");
         messageLabel.setVisible(true);
     }
 

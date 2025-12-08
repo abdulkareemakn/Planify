@@ -86,9 +86,9 @@ public class EventsController implements Initializable {
                     setText(item);
                     EventTableRow row = getTableView().getItems().get(getIndex());
                     switch (row.getEventType()) {
-                        case "Wedding" -> setStyle("-fx-text-fill: #2980b9;");
-                        case "Birthday" -> setStyle("-fx-text-fill: #27ae60;");
-                        case "Seminar" -> setStyle("-fx-text-fill: #e67e22;");
+                        case "Wedding" -> setStyle("-fx-text-fill: #3B82F6;");
+                        case "Birthday" -> setStyle("-fx-text-fill: #10B981;");
+                        case "Seminar" -> setStyle("-fx-text-fill: #F59E0B;");
                         default -> setStyle("");
                     }
                 }
@@ -101,7 +101,7 @@ public class EventsController implements Initializable {
             private final HBox buttonBox = new HBox(5);
 
             {
-                deleteBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-padding: 4 8;");
+                deleteBtn.setStyle("-fx-background-color: #EF4444; -fx-text-fill: white; -fx-padding: 4 12; -fx-background-radius: 4; -fx-cursor: hand;");
                 deleteBtn.setOnAction(e -> deleteEvent(getTableView().getItems().get(getIndex())));
                 buttonBox.setAlignment(Pos.CENTER);
                 buttonBox.getChildren().addAll(deleteBtn);
