@@ -139,10 +139,16 @@ public class EventsController implements Initializable {
                 List<EventTableRow> events = (List<EventTableRow>) result;
                 eventData.setAll(events);
                 eventsTable.refresh();
+                
+                // Show placeholder if no events
+                if (events.isEmpty()) {
+                    eventsTable.setPlaceholder(new Label("No events yet. Click '+ New Event' to create one."));
+                }
             },
             error -> {
                 error.printStackTrace();
-                showErrorAlert("Database Error", "Failed to load events: " + error.getMessage());
+                // Show empty state instead of error for empty database
+                eventsTable.setPlaceholder(new Label("No events yet. Click '+ New Event' to create one."));
             }
         );
     }
@@ -198,6 +204,11 @@ public class EventsController implements Initializable {
     @FXML
     private void createNewEvent() {
         SceneManager.getInstance().switchScene("CreateEvent.fxml");
+    }
+
+    @FXML
+    private void handleLogout() {
+        SceneManager.getInstance().switchScene("LoginPage.fxml");
     }
 
     /**

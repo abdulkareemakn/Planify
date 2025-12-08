@@ -35,6 +35,17 @@
                     <Font size="13"/>
                 </font>
             </Button>
+
+            <!-- Separator -->
+            <Region prefWidth="20"/>
+
+            <!-- Logout Button -->
+            <Button fx:id="logoutBtn" text="Logout" onAction="#handleLogout"
+                    style="-fx-background-color: transparent; -fx-text-fill: #94A3B8; -fx-padding: 8 16; -fx-background-radius: 6; -fx-cursor: hand;">
+                <font>
+                    <Font size="13"/>
+                </font>
+            </Button>
         </HBox>
     </top>
 

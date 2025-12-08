@@ -87,6 +87,11 @@ public class DashboardController implements Initializable {
         }
     }
 
+    @FXML
+    private void handleLogout() {
+        SceneManager.getInstance().switchScene("LoginPage.fxml");
+    }
+
     /**
      * Updates the visual style of navigation buttons to show which is active.
      */
