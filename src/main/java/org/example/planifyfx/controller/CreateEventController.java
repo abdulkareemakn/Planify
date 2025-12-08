@@ -83,8 +83,12 @@ public class CreateEventController implements Initializable {
 
     // Venue mapping (display name -> Venue object)
     private Map<String, Venue> venueMap = new HashMap<>();
+    
+    // Pending venue selection (for edit mode, set before venues are loaded)
+    private Integer pendingVenueId = null;
 
     private Integer editingEventId = null;
+    private Integer editingClientId = null;
 
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
@@ -115,12 +119,32 @@ public class CreateEventController implements Initializable {
                     venueCombo.getItems().add(displayName);
                     venueMap.put(displayName, venue);
                 }
+                
+                // If we have a pending venue selection (from edit mode), apply it now
+                if (pendingVenueId != null) {
+                    selectVenueById(pendingVenueId);
+                    pendingVenueId = null;
+                }
             },
             error -> {
                 System.err.println("Failed to load venues: " + error.getMessage());
                 error.printStackTrace();
             }
         );
+    }
+    
+    /**
+     * Selects a venue in the dropdown by its ID.
+     */
+    private void selectVenueById(Integer venueId) {
+        if (venueId == null) return;
+        
+        for (Map.Entry<String, Venue> entry : venueMap.entrySet()) {
+            if (entry.getValue().getId() == venueId) {
+                venueCombo.setValue(entry.getKey());
+                break;
+            }
+        }
     }
 
     /**
@@ -640,16 +664,105 @@ public class CreateEventController implements Initializable {
 
     private void updateEvent() {
         System.out.println("Updating event with ID: " + editingEventId);
+        
+        String eventType = eventTypeCombo.getValue();
+        String eventName = eventNameField.getText().trim();
+        LocalDate eventDate = eventDatePicker.getValue();
+        LocalTime eventTime = LocalTime.of(
+                Integer.parseInt(hourCombo.getValue()),
+                Integer.parseInt(minuteCombo.getValue())
+        );
+        LocalDateTime eventDateTime = LocalDateTime.of(eventDate, eventTime);
+        int attendance = Integer.parseInt(attendanceField.getText().trim());
+
+        String clientName = clientNameField.getText().trim();
+        String clientEmail = clientEmailField.getText().trim();
+        String clientPhone = clientPhoneField.getText().trim();
+
+        // Get selected venue (optional)
+        Venue selectedVenue = getSelectedVenue();
+
+        // Create client with existing ID
+        Client client = new Client(clientName, clientEmail, clientPhone);
+        client.setId(editingClientId);
+
+        if ("Wedding".equals(eventType)) {
+            String brideName = brideNameField.getText().trim();
+            String groomName = groomNameField.getText().trim();
+            boolean photographerRequired = photographerCheckBox.isSelected();
+
+            // Update client first, then update event
+            ClientRepository.update(client,
+                () -> {
+                    WeddingEvent wedding = new WeddingEvent(eventName, eventDateTime, attendance, client,
+                            brideName, groomName, photographerRequired);
+                    wedding.setId(editingEventId);
+                    wedding.setVenue(selectedVenue);
+                    EventRepository.update(wedding,
+                            () -> onSaveSuccess(),
+                            error -> onSaveError(error));
+                },
+                error -> onSaveError(error));
+
+        } else if ("Birthday".equals(eventType)) {
+            int age = Integer.parseInt(ageField.getText().trim());
+            String theme = themeField != null ? themeField.getText().trim() : "";
+            int numberOfKids = 0;
+            if (numberOfKidsField != null && !numberOfKidsField.getText().trim().isEmpty()) {
+                numberOfKids = Integer.parseInt(numberOfKidsField.getText().trim());
+            }
+            final int finalNumberOfKids = numberOfKids;
+
+            // Update client first, then update event
+            ClientRepository.update(client,
+                () -> {
+                    BirthdayEvent birthday = new BirthdayEvent(eventName, eventDateTime, attendance, client,
+                            age, theme, finalNumberOfKids);
+                    birthday.setId(editingEventId);
+                    birthday.setVenue(selectedVenue);
+                    EventRepository.update(birthday,
+                            () -> onSaveSuccess(),
+                            error -> onSaveError(error));
+                },
+                error -> onSaveError(error));
+
+        } else if ("Seminar".equals(eventType)) {
+            String chiefGuest = chiefGuestField.getText().trim();
+            String speaker = speakerField.getText().trim();
+            String topic = topicField.getText().trim();
+
+            // Update client first, then update event
+            ClientRepository.update(client,
+                () -> {
+                    SeminarEvent seminar = new SeminarEvent(eventName, eventDateTime, attendance, client,
+                            chiefGuest, speaker, topic);
+                    seminar.setId(editingEventId);
+                    seminar.setVenue(selectedVenue);
+                    EventRepository.update(seminar,
+                            () -> onSaveSuccess(),
+                            error -> onSaveError(error));
+                },
+                error -> onSaveError(error));
+        }
     }
 
-    public void setEventForEditing(Integer eventId, String eventType, String eventName,
+    /**
+     * Sets up the form for editing an existing event.
+     * Called from EventsController when the Edit button is clicked.
+     */
+    public void setEventForEditing(Integer eventId, Integer clientId, String eventType, String eventName,
                                    LocalDate eventDate, LocalTime eventTime, int attendance,
+                                   Integer venueId,
                                    String clientName, String clientEmail, String clientPhone) {
         this.editingEventId = eventId;
+        this.editingClientId = clientId;
         pageTitle.setText("Edit Event");
+        saveBtn.setText("Update Event");
 
-
+        // Set event type first (triggers dynamic fields)
         eventTypeCombo.setValue(eventType);
+        eventTypeCombo.setDisable(true); // Don't allow changing event type during edit
+        
         eventNameField.setText(eventName);
         eventDatePicker.setValue(eventDate);
         hourCombo.setValue(String.format("%02d", eventTime.getHour()));
@@ -659,6 +772,15 @@ public class CreateEventController implements Initializable {
         clientNameField.setText(clientName);
         clientEmailField.setText(clientEmail);
         clientPhoneField.setText(clientPhone);
+
+        // Try to select the venue - if venues aren't loaded yet, store it for later
+        if (venueId != null) {
+            if (venueMap.isEmpty()) {
+                pendingVenueId = venueId;
+            } else {
+                selectVenueById(venueId);
+            }
+        }
 
         showDynamicFields(eventType);
     }
@@ -691,6 +813,7 @@ public class CreateEventController implements Initializable {
 
     public void clearForm() {
         eventTypeCombo.setValue(null);
+        eventTypeCombo.setDisable(false);
         eventNameField.clear();
         eventDatePicker.setValue(null);
         hourCombo.setValue(null);
@@ -702,6 +825,9 @@ public class CreateEventController implements Initializable {
         clientPhoneField.clear();
         dynamicFieldsContainer.getChildren().clear();
         editingEventId = null;
+        editingClientId = null;
+        pendingVenueId = null;
         pageTitle.setText("Create New Event");
+        saveBtn.setText("Save Event");
     }
 }

@@ -124,8 +124,12 @@ public class EventRepository {
                     e.name AS event_name,
                     e.event_type,
                     e.time AS event_time,
+                    c.client_id,
                     c.name AS client_name,
+                    c.email_address AS client_email,
+                    c.phone_number AS client_phone,
                     e.attendance,
+                    v.venue_id,
                     v.name AS venue_name,
                     w.bride_name,
                     w.groom_name,
@@ -160,8 +164,17 @@ public class EventRepository {
                 String date = dateTimeParts.length > 0 ? dateTimeParts[0] : "";
                 String time = dateTimeParts.length > 1 ? dateTimeParts[1] : "";
                 
+                // Client details
+                int clientId = rs.getInt("client_id");
                 String clientName = rs.getString("client_name");
+                String clientEmail = rs.getString("client_email");
+                String clientPhone = rs.getString("client_phone");
+                
                 int attendance = rs.getInt("attendance");
+                
+                // Venue details
+                Integer venueId = rs.getInt("venue_id");
+                if (rs.wasNull()) venueId = null;
                 String venueName = rs.getString("venue_name");
 
                 // Wedding details
@@ -183,7 +196,9 @@ public class EventRepository {
                 String topic = rs.getString("topic");
 
                 events.add(new EventsController.EventTableRow(
-                        id, name, type, date, time, clientName, attendance, venueName,
+                        id, name, type, date, time, 
+                        clientId, clientName, clientEmail, clientPhone,
+                        attendance, venueId, venueName,
                         brideName, groomName, photographerRequired, 
                         age, theme, numberOfKids, 
                         chiefGuest, speaker, topic
@@ -216,6 +231,82 @@ public class EventRepository {
             onSuccess,
             error -> onError.accept(error)
         );
+    }
+
+    /**
+     * Updates an existing event in the database asynchronously.
+     * 
+     * @param event The event with updated values
+     * @param onSuccess Called when the event is updated successfully
+     * @param onError Called with the exception if update fails
+     */
+    public static void update(Event event, Runnable onSuccess, Consumer<Throwable> onError) {
+        String sql = "UPDATE events SET name = ?, time = ?, attendance = ?, event_type = ?, venue_id = ? WHERE event_id = ?";
+
+        DatabaseHelper.runAsync(
+            () -> {
+                try (Connection conn = DatabaseHelper.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    
+                    stmt.setString(1, event.getName());
+                    stmt.setString(2, event.getFormattedDateTime());
+                    stmt.setInt(3, event.getAttendance());
+                    stmt.setString(4, event.getEventType());
+                    
+                    if (event.getVenue() != null) {
+                        stmt.setInt(5, event.getVenue().getId());
+                    } else {
+                        stmt.setNull(5, java.sql.Types.INTEGER);
+                    }
+                    
+                    stmt.setInt(6, event.getId());
+                    stmt.executeUpdate();
+                    
+                    // Update type-specific details
+                    updateEventDetails(conn, event);
+                    
+                    return event.getId();
+                }
+            },
+            result -> onSuccess.run(),
+            error -> onError.accept(error)
+        );
+    }
+
+    /**
+     * Updates the type-specific details for an event.
+     */
+    private static void updateEventDetails(Connection conn, Event event) throws SQLException {
+        int eventId = event.getId();
+        
+        if (event instanceof WeddingEvent weddingEvent) {
+            String sql = "UPDATE wedding_event SET bride_name = ?, groom_name = ?, photographer_required = ? WHERE event_id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, weddingEvent.getBrideName());
+                stmt.setString(2, weddingEvent.getGroomName());
+                stmt.setInt(3, weddingEvent.isPhotographerRequired() ? 1 : 0);
+                stmt.setInt(4, eventId);
+                stmt.executeUpdate();
+            }
+        } else if (event instanceof BirthdayEvent birthdayEvent) {
+            String sql = "UPDATE birthday_event SET age = ?, theme = ?, number_of_kids = ? WHERE event_id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, birthdayEvent.getAge());
+                stmt.setString(2, birthdayEvent.getTheme());
+                stmt.setInt(3, birthdayEvent.getNumberOfKids());
+                stmt.setInt(4, eventId);
+                stmt.executeUpdate();
+            }
+        } else if (event instanceof SeminarEvent seminarEvent) {
+            String sql = "UPDATE seminar_event SET chief_guest = ?, speaker = ?, topic = ? WHERE event_id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, seminarEvent.getChiefGuest());
+                stmt.setString(2, seminarEvent.getSpeaker());
+                stmt.setString(3, seminarEvent.getTopic());
+                stmt.setInt(4, eventId);
+                stmt.executeUpdate();
+            }
+        }
     }
 
     // ==================== Statistics Methods ====================

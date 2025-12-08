@@ -245,20 +245,52 @@ public class EventsController implements Initializable {
 
     /**
      * Opens the edit screen for an event.
-     * TODO: Implement full edit functionality
+     * Navigates to CreateEvent screen with pre-filled data.
      */
     private void editEvent(EventTableRow eventRow) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Edit Event");
-        alert.setHeaderText("Edit: " + eventRow.getName());
-        alert.setContentText("Edit functionality coming soon!\n\nFor now, you can delete and recreate the event.");
+        // Parse date and time from strings
+        java.time.LocalDate eventDate = java.time.LocalDate.parse(eventRow.getDate());
+        java.time.LocalTime eventTime = java.time.LocalTime.parse(eventRow.getTime());
         
-        // Style the dialog
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(getClass().getResource("/org/example/planifyfx/styles.css").toExternalForm());
-        dialogPane.setMinWidth(350);
+        // Switch to CreateEvent screen and get the controller
+        CreateEventController controller = SceneManager.getInstance()
+                .switchSceneWithController("CreateEvent.fxml");
         
-        alert.showAndWait();
+        if (controller != null) {
+            // Set the base event data
+            controller.setEventForEditing(
+                eventRow.getId(),
+                eventRow.getClientId(),
+                eventRow.getEventType(),
+                eventRow.getName(),
+                eventDate,
+                eventTime,
+                eventRow.getAttendance(),
+                eventRow.getVenueId(),
+                eventRow.getClientName(),
+                eventRow.getClientEmail(),
+                eventRow.getClientPhone()
+            );
+            
+            // Set type-specific data
+            switch (eventRow.getEventType()) {
+                case "Wedding" -> controller.setWeddingData(
+                    eventRow.getBrideName(),
+                    eventRow.getGroomName(),
+                    eventRow.getPhotographerRequired() != null && eventRow.getPhotographerRequired()
+                );
+                case "Birthday" -> controller.setBirthdayData(
+                    eventRow.getAge() != null ? eventRow.getAge() : 0,
+                    eventRow.getTheme() != null ? eventRow.getTheme() : "",
+                    eventRow.getNumberOfKids() != null ? eventRow.getNumberOfKids() : 0
+                );
+                case "Seminar" -> controller.setSeminarData(
+                    eventRow.getChiefGuest(),
+                    eventRow.getSpeaker(),
+                    eventRow.getTopic()
+                );
+            }
+        }
     }
 
     /**
@@ -337,8 +369,17 @@ public class EventsController implements Initializable {
         private final String eventType;
         private final String date;
         private final String time;
+        
+        // Client fields
+        private final int clientId;
         private final String clientName;
+        private final String clientEmail;
+        private final String clientPhone;
+        
         private final int attendance;
+        
+        // Venue fields
+        private final Integer venueId;
         private final String venueName;
         
         // Wedding-specific fields
@@ -357,7 +398,8 @@ public class EventsController implements Initializable {
         private final String topic;
 
         public EventTableRow(int id, String name, String eventType, String date, String time, 
-                             String clientName, int attendance, String venueName,
+                             int clientId, String clientName, String clientEmail, String clientPhone,
+                             int attendance, Integer venueId, String venueName,
                              String brideName, String groomName, Boolean photographerRequired,
                              Integer age, String theme, Integer numberOfKids, 
                              String chiefGuest, String speaker, String topic) {
@@ -366,8 +408,12 @@ public class EventsController implements Initializable {
             this.eventType = eventType;
             this.date = date;
             this.time = time;
+            this.clientId = clientId;
             this.clientName = clientName;
+            this.clientEmail = clientEmail;
+            this.clientPhone = clientPhone;
             this.attendance = attendance;
+            this.venueId = venueId;
             this.venueName = venueName;
             this.brideName = brideName;
             this.groomName = groomName;
@@ -386,8 +432,12 @@ public class EventsController implements Initializable {
         public String getEventType() { return eventType; }
         public String getDate() { return date; }
         public String getTime() { return time; }
+        public int getClientId() { return clientId; }
         public String getClientName() { return clientName; }
+        public String getClientEmail() { return clientEmail; }
+        public String getClientPhone() { return clientPhone; }
         public int getAttendance() { return attendance; }
+        public Integer getVenueId() { return venueId; }
         public String getVenueName() { return venueName; }
         public String getBrideName() { return brideName; }
         public String getGroomName() { return groomName; }

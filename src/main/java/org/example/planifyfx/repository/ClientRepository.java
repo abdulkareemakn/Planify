@@ -55,4 +55,32 @@ public class ClientRepository {
             error -> onError.accept(error)
         );
     }
+
+    /**
+     * Updates an existing client in the database asynchronously.
+     * 
+     * @param client The client with updated values (must have ID set)
+     * @param onSuccess Called when the update succeeds
+     * @param onError Called with the exception if update fails
+     */
+    public static void update(Client client, Runnable onSuccess, Consumer<Throwable> onError) {
+        String sql = "UPDATE clients SET name = ?, email_address = ?, phone_number = ? WHERE client_id = ?";
+
+        DatabaseHelper.runAsyncUpdate(
+            () -> {
+                try (Connection conn = DatabaseHelper.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    
+                    stmt.setString(1, client.getName());
+                    stmt.setString(2, client.getEmail());
+                    stmt.setString(3, client.getPhoneNumber());
+                    stmt.setInt(4, client.getId());
+                    
+                    stmt.executeUpdate();
+                }
+            },
+            onSuccess,
+            error -> onError.accept(error)
+        );
+    }
 }
