@@ -5,6 +5,13 @@ CREATE TABLE IF NOT EXISTS clients (
     phone_number TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS venues (
+    venue_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    address TEXT NOT NULL,
+    capacity INTEGER NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS events (
     event_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -12,7 +19,9 @@ CREATE TABLE IF NOT EXISTS events (
     attendance INTEGER NOT NULL,
     event_type TEXT NOT NULL CHECK (event_type IN ('Wedding', 'Birthday', 'Seminar')),
     client_id INTEGER NOT NULL,
-    FOREIGN KEY (client_id) REFERENCES clients(client_id) ON DELETE CASCADE
+    venue_id INTEGER,
+    FOREIGN KEY (client_id) REFERENCES clients(client_id) ON DELETE CASCADE,
+    FOREIGN KEY (venue_id) REFERENCES venues(venue_id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS wedding_event (
@@ -39,18 +48,25 @@ CREATE TABLE IF NOT EXISTS seminar_event (
     FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS statistics (
-    total_events INTEGER DEFAULT 0,
-    total_wedding_events INTEGER DEFAULT 0,
-    total_birthday_events INTEGER DEFAULT 0,
-    total_seminar_events INTEGER DEFAULT 0
-);
-
 CREATE TABLE IF NOT EXISTS credentials (
     username TEXT NOT NULL DEFAULT "admin",
     password TEXT NOT NULL DEFAULT "7P7V9OGd0xAXsgt1bpkQFQ==:7z/Mub6Ez3GilGCgxW307hW3wR1Pt2fPesp5FkhH28Y="
 );
 
+-- Insert default admin credentials if not exists
 INSERT INTO credentials (username, password)
     SELECT "admin", "7P7V9OGd0xAXsgt1bpkQFQ==:7z/Mub6Ez3GilGCgxW307hW3wR1Pt2fPesp5FkhH28Y="
-WHERE NOT EXISTS (SELECT 1 FROM credentials WHERE username = 'admin')
+WHERE NOT EXISTS (SELECT 1 FROM credentials WHERE username = 'admin');
+
+-- Insert some default venues
+INSERT INTO venues (name, address, capacity)
+    SELECT "Grand Ballroom", "123 Main Street", 500
+WHERE NOT EXISTS (SELECT 1 FROM venues WHERE name = 'Grand Ballroom');
+
+INSERT INTO venues (name, address, capacity)
+    SELECT "Garden Pavilion", "456 Park Avenue", 200
+WHERE NOT EXISTS (SELECT 1 FROM venues WHERE name = 'Garden Pavilion');
+
+INSERT INTO venues (name, address, capacity)
+    SELECT "Conference Center", "789 Business Blvd", 300
+WHERE NOT EXISTS (SELECT 1 FROM venues WHERE name = 'Conference Center')

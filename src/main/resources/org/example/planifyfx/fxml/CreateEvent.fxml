@@ -154,6 +154,9 @@
 
                         <Label text="Expected Attendance *" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                         <TextField fx:id="attendanceField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                        <Label text="Venue" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                        <ComboBox fx:id="venueCombo" promptText="Select venue (optional)" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                      </GridPane>
                   </VBox>
 

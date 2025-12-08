@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Abstract base class for all event types.
- * Contains common fields shared by Wedding, Birthday, Seminar, and Custom events.
+ * Contains common fields shared by Wedding, Birthday, and Seminar events.
  */
 public abstract class Event {
 
@@ -15,6 +15,7 @@ public abstract class Event {
     protected int attendance;
     protected String eventType;
     protected Client client;
+    protected Venue venue;
 
     /**
      * Constructor for creating a new event.
@@ -85,6 +86,14 @@ public abstract class Event {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public Venue getVenue() {
+        return venue;
+    }
+
+    public void setVenue(Venue venue) {
+        this.venue = venue;
     }
 
     /**

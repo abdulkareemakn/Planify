@@ -162,6 +162,7 @@ public class EventsController implements Initializable {
                 .append("Date: ").append(eventRow.getDate()).append("\n")
                 .append("Time: ").append(eventRow.getTime()).append("\n")
                 .append("Client: ").append(eventRow.getClientName()).append("\n")
+                .append("Venue: ").append(eventRow.getVenueName() != null ? eventRow.getVenueName() : "Not specified").append("\n")
                 .append("Attendance: ").append(eventRow.getAttendance()).append("\n");
 
         switch (eventRow.getEventType()) {
@@ -257,6 +258,7 @@ public class EventsController implements Initializable {
         private final String time;
         private final String clientName;
         private final int attendance;
+        private final String venueName;
         
         // Wedding-specific fields
         private final String brideName;
@@ -274,7 +276,7 @@ public class EventsController implements Initializable {
         private final String topic;
 
         public EventTableRow(int id, String name, String eventType, String date, String time, 
-                             String clientName, int attendance,
+                             String clientName, int attendance, String venueName,
                              String brideName, String groomName, Boolean photographerRequired,
                              Integer age, String theme, Integer numberOfKids, 
                              String chiefGuest, String speaker, String topic) {
@@ -285,6 +287,7 @@ public class EventsController implements Initializable {
             this.time = time;
             this.clientName = clientName;
             this.attendance = attendance;
+            this.venueName = venueName;
             this.brideName = brideName;
             this.groomName = groomName;
             this.photographerRequired = photographerRequired;
@@ -304,6 +307,7 @@ public class EventsController implements Initializable {
         public String getTime() { return time; }
         public String getClientName() { return clientName; }
         public int getAttendance() { return attendance; }
+        public String getVenueName() { return venueName; }
         public String getBrideName() { return brideName; }
         public String getGroomName() { return groomName; }
         public Boolean getPhotographerRequired() { return photographerRequired; }

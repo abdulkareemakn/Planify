@@ -28,7 +28,7 @@ public class EventRepository {
      * @param onError Called with the exception if save fails
      */
     public static void save(Event event, Runnable onSuccess, Consumer<Throwable> onError) {
-        String sql = "INSERT INTO events (name, time, attendance, event_type, client_id) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO events (name, time, attendance, event_type, client_id, venue_id) VALUES (?, ?, ?, ?, ?, ?)";
 
         DatabaseHelper.runAsync(
             () -> {
@@ -40,6 +40,13 @@ public class EventRepository {
                     stmt.setInt(3, event.getAttendance());
                     stmt.setString(4, event.getEventType());
                     stmt.setInt(5, event.getClient().getId());
+                    
+                    // Venue is optional - can be null
+                    if (event.getVenue() != null) {
+                        stmt.setInt(6, event.getVenue().getId());
+                    } else {
+                        stmt.setNull(6, java.sql.Types.INTEGER);
+                    }
                     
                     int affectedRows = stmt.executeUpdate();
                     if (affectedRows == 0) {
@@ -119,6 +126,7 @@ public class EventRepository {
                     e.time AS event_time,
                     c.name AS client_name,
                     e.attendance,
+                    v.name AS venue_name,
                     w.bride_name,
                     w.groom_name,
                     w.photographer_required,
@@ -130,6 +138,7 @@ public class EventRepository {
                     s.topic
                 FROM events e
                 JOIN clients c ON e.client_id = c.client_id
+                LEFT JOIN venues v ON e.venue_id = v.venue_id
                 LEFT JOIN wedding_event w ON e.event_id = w.event_id
                 LEFT JOIN birthday_event b ON e.event_id = b.event_id
                 LEFT JOIN seminar_event s ON e.event_id = s.event_id
@@ -153,6 +162,7 @@ public class EventRepository {
                 
                 String clientName = rs.getString("client_name");
                 int attendance = rs.getInt("attendance");
+                String venueName = rs.getString("venue_name");
 
                 // Wedding details
                 String brideName = rs.getString("bride_name");
@@ -173,7 +183,7 @@ public class EventRepository {
                 String topic = rs.getString("topic");
 
                 events.add(new EventsController.EventTableRow(
-                        id, name, type, date, time, clientName, attendance,
+                        id, name, type, date, time, clientName, attendance, venueName,
                         brideName, groomName, photographerRequired, 
                         age, theme, numberOfKids, 
                         chiefGuest, speaker, topic

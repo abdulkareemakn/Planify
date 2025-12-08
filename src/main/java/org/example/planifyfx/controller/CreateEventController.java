@@ -2,28 +2,33 @@ package org.example.planifyfx.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import javafx.geometry.Insets;
 import org.example.planifyfx.model.BirthdayEvent;
 import org.example.planifyfx.model.Client;
 import org.example.planifyfx.model.SeminarEvent;
+import org.example.planifyfx.model.Venue;
 import org.example.planifyfx.model.WeddingEvent;
 import org.example.planifyfx.repository.ClientRepository;
 import org.example.planifyfx.repository.EventRepository;
+import org.example.planifyfx.repository.VenueRepository;
 import org.example.planifyfx.util.SceneManager;
-
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
-
+/**
+ * Controller for the Create Event screen.
+ * Handles event creation with dynamic fields based on event type.
+ */
 public class CreateEventController implements Initializable {
 
     @FXML
@@ -49,6 +54,8 @@ public class CreateEventController implements Initializable {
     private ComboBox<String> minuteCombo;
     @FXML
     private TextField attendanceField;
+    @FXML
+    private ComboBox<String> venueCombo;
 
     @FXML
     private TextField clientNameField;
@@ -60,18 +67,23 @@ public class CreateEventController implements Initializable {
     @FXML
     private VBox dynamicFieldsContainer;
 
+    // Wedding fields
     private TextField brideNameField;
     private TextField groomNameField;
     private CheckBox photographerCheckBox;
 
+    // Birthday fields
     private TextField ageField;
     private TextField themeField;
     private TextField numberOfKidsField;
 
+    // Seminar fields
     private TextField chiefGuestField;
     private TextField speakerField;
     private TextField topicField;
 
+    // Venue mapping (display name -> Venue object)
+    private Map<String, Venue> venueMap = new HashMap<>();
 
     private Integer editingEventId = null;
 
@@ -84,10 +96,44 @@ public class CreateEventController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         setupEventTypeListener();
         setupValidation();
         setupDateRestrictions();
+        loadVenues();
+    }
+
+    /**
+     * Loads venues from the database into the venue dropdown.
+     */
+    private void loadVenues() {
+        VenueRepository.fetchAll(
+            venues -> {
+                venueCombo.getItems().clear();
+                venueMap.clear();
+                
+                for (Venue venue : venues) {
+                    String displayName = venue.getName() + " (Capacity: " + venue.getCapacity() + ")";
+                    venueCombo.getItems().add(displayName);
+                    venueMap.put(displayName, venue);
+                }
+            },
+            error -> {
+                System.err.println("Failed to load venues: " + error.getMessage());
+                error.printStackTrace();
+            }
+        );
+    }
+
+    /**
+     * Gets the selected venue from the dropdown.
+     * @return The selected Venue, or null if none selected
+     */
+    private Venue getSelectedVenue() {
+        String selected = venueCombo.getValue();
+        if (selected == null || selected.isEmpty()) {
+            return null;
+        }
+        return venueMap.get(selected);
     }
 
     private void setupEventTypeListener() {
@@ -421,11 +467,15 @@ public class CreateEventController implements Initializable {
         String clientEmail = clientEmailField.getText().trim();
         String clientPhone = clientPhoneField.getText().trim();
 
+        // Get selected venue (optional)
+        Venue selectedVenue = getSelectedVenue();
+
         System.out.println("Event Details:");
         System.out.println("Type: " + eventType);
         System.out.println("Name: " + eventName);
         System.out.println("Date & Time: " + eventDateTime);
         System.out.println("Attendance: " + attendance);
+        System.out.println("Venue: " + (selectedVenue != null ? selectedVenue.getName() : "None"));
         System.out.println("Client: " + clientName + " (" + clientEmail + ", " + clientPhone + ")");
 
         // Create client with direct constructor (name, email, phoneNumber)
@@ -446,6 +496,7 @@ public class CreateEventController implements Initializable {
                 client.setId(clientId);
                 WeddingEvent wedding = new WeddingEvent(eventName, eventDateTime, attendance, client,
                         brideName, groomName, photographerRequired);
+                wedding.setVenue(selectedVenue);
                 EventRepository.save(wedding,
                         () -> System.out.println("Wedding event saved successfully"),
                         Throwable::printStackTrace);
@@ -472,6 +523,7 @@ public class CreateEventController implements Initializable {
                 client.setId(clientId);
                 BirthdayEvent birthday = new BirthdayEvent(eventName, eventDateTime, attendance, client,
                         age, theme, finalNumberOfKids);
+                birthday.setVenue(selectedVenue);
                 EventRepository.save(birthday,
                         () -> System.out.println("Birthday event saved successfully"),
                         Throwable::printStackTrace);
@@ -492,6 +544,7 @@ public class CreateEventController implements Initializable {
                 client.setId(clientId);
                 SeminarEvent seminar = new SeminarEvent(eventName, eventDateTime, attendance, client,
                         chiefGuest, speaker, topic);
+                seminar.setVenue(selectedVenue);
                 EventRepository.save(seminar,
                         () -> System.out.println("Seminar event saved successfully"),
                         Throwable::printStackTrace);
@@ -557,6 +610,7 @@ public class CreateEventController implements Initializable {
         hourCombo.setValue(null);
         minuteCombo.setValue(null);
         attendanceField.clear();
+        venueCombo.setValue(null);
         clientNameField.clear();
         clientEmailField.clear();
         clientPhoneField.clear();
