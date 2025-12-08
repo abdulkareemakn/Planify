@@ -2,33 +2,43 @@ package org.example.planifyfx.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
-import org.example.planifyfx.util.EventInfo;
 
+/**
+ * Abstract base class for all event types.
+ * Contains common fields shared by Wedding, Birthday, Seminar, and Custom events.
+ */
 public abstract class Event {
 
     protected int id;
     protected String name;
-    protected LocalDateTime time;
-    protected Client client;
+    protected LocalDateTime dateTime;
     protected int attendance;
     protected String eventType;
+    protected Client client;
 
-
-    public Event(String name, int attendance, Client client) {
+    /**
+     * Constructor for creating a new event.
+     */
+    public Event(String name, LocalDateTime dateTime, int attendance, Client client) {
         this.name = name;
+        this.dateTime = dateTime;
         this.attendance = attendance;
         this.client = client;
     }
 
+    /**
+     * Default constructor for loading events from database.
+     */
     public Event() {}
 
+    // Getters and Setters
 
+    public int getId() {
+        return id;
+    }
 
-    public Event(EventInfo eventInfo) {
-        this.name = eventInfo.getName();
-        this.attendance = eventInfo.getAttendance();
-        this.client = eventInfo.getClient();
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -39,20 +49,22 @@ public abstract class Event {
         this.name = name;
     }
 
-    public String getTime() {
-        return time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setTime(LocalDateTime time) {
-        this.time = time;
+    /**
+     * Returns the date and time formatted as "yyyy-MM-dd HH:mm".
+     */
+    public String getFormattedDateTime() {
+        if (dateTime == null) {
+            return "";
+        }
+        return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
 
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public int getAttendance() {
@@ -67,13 +79,16 @@ public abstract class Event {
         return eventType;
     }
 
-    public int getId() {
-        return id;
+    public Client getClient() {
+        return client;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
+    /**
+     * Abstract method - each event type must provide its own string representation.
+     */
     public abstract String toString();
 }

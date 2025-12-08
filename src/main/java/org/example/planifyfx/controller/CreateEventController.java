@@ -13,10 +13,7 @@ import org.example.planifyfx.model.SeminarEvent;
 import org.example.planifyfx.model.WeddingEvent;
 import org.example.planifyfx.repository.ClientRepository;
 import org.example.planifyfx.repository.EventRepository;
-import org.example.planifyfx.util.ContactInfo;
-import org.example.planifyfx.util.EventInfo;
 import org.example.planifyfx.util.SceneManager;
-import org.example.planifyfx.util.Statistics;
 
 
 import java.net.URL;
@@ -431,6 +428,9 @@ public class CreateEventController implements Initializable {
         System.out.println("Attendance: " + attendance);
         System.out.println("Client: " + clientName + " (" + clientEmail + ", " + clientPhone + ")");
 
+        // Create client with direct constructor (name, email, phoneNumber)
+        Client client = new Client(clientName, clientEmail, clientPhone);
+
         if ("Wedding".equals(eventType)) {
             String brideName = brideNameField.getText().trim();
             String groomName = groomNameField.getText().trim();
@@ -441,21 +441,15 @@ public class CreateEventController implements Initializable {
             System.out.println("Groom: " + groomName);
             System.out.println("Photographer Required: " + photographerRequired);
 
-            ContactInfo contactInfo = new ContactInfo(clientPhone, clientEmail);
-
-            Client client = new Client(clientName, contactInfo);
-            EventInfo eventInfo = new EventInfo(eventName, attendance, client);
-
-            WeddingEvent wedding = new WeddingEvent(eventInfo, brideName, groomName, photographerRequired);
-            wedding.setTime(eventDateTime);
+            // Save client first, then create and save event with generated client ID
             ClientRepository.save(client, clientId -> {
                 client.setId(clientId);
-                wedding.setClient(client);
-                EventRepository.save(wedding);
+                WeddingEvent wedding = new WeddingEvent(eventName, eventDateTime, attendance, client,
+                        brideName, groomName, photographerRequired);
+                EventRepository.save(wedding,
+                        () -> System.out.println("Wedding event saved successfully"),
+                        Throwable::printStackTrace);
             }, Throwable::printStackTrace);
-            Statistics.totalEvents++;
-            Statistics.totalWeddingEvents++;
-            Statistics.eventsAdded++;
 
         } else if ("Birthday".equals(eventType)) {
             int age = Integer.parseInt(ageField.getText().trim());
@@ -470,23 +464,19 @@ public class CreateEventController implements Initializable {
             System.out.println("Theme: " + theme);
             System.out.println("Number of Kids: " + numberOfKids);
 
+            // Capture for lambda
+            final int finalNumberOfKids = numberOfKids;
 
-            ContactInfo contactInfo = new ContactInfo(clientPhone, clientEmail);
-
-            Client client = new Client(clientName, contactInfo);
-            EventInfo eventInfo = new EventInfo(eventName, attendance, client);
-
-            BirthdayEvent birthday = new BirthdayEvent(eventInfo, age, theme, numberOfKids);
-            birthday.setTime(eventDateTime);
-
+            // Save client first, then create and save event with generated client ID
             ClientRepository.save(client, clientId -> {
                 client.setId(clientId);
-                birthday.setClient(client);
-                EventRepository.save(birthday);
+                BirthdayEvent birthday = new BirthdayEvent(eventName, eventDateTime, attendance, client,
+                        age, theme, finalNumberOfKids);
+                EventRepository.save(birthday,
+                        () -> System.out.println("Birthday event saved successfully"),
+                        Throwable::printStackTrace);
             }, Throwable::printStackTrace);
-            Statistics.totalEvents++;
-            Statistics.totalBirthdayEvents++;
-            Statistics.eventsAdded++;
+
         } else if ("Seminar".equals(eventType)) {
             String chiefGuest = chiefGuestField.getText().trim();
             String speaker = speakerField.getText().trim();
@@ -497,21 +487,15 @@ public class CreateEventController implements Initializable {
             System.out.println("Speaker: " + speaker);
             System.out.println("Topic: " + topic);
 
-            ContactInfo contactInfo = new ContactInfo(clientPhone, clientEmail);
-            Client client = new Client(clientName, contactInfo);
-            EventInfo eventInfo = new EventInfo(eventName, attendance, client);
-
-            SeminarEvent seminar = new SeminarEvent(eventInfo, chiefGuest, speaker, topic);
-            seminar.setTime(eventDateTime);
-
+            // Save client first, then create and save event with generated client ID
             ClientRepository.save(client, clientId -> {
                 client.setId(clientId);
-                seminar.setClient(client);
-                EventRepository.save(seminar);
+                SeminarEvent seminar = new SeminarEvent(eventName, eventDateTime, attendance, client,
+                        chiefGuest, speaker, topic);
+                EventRepository.save(seminar,
+                        () -> System.out.println("Seminar event saved successfully"),
+                        Throwable::printStackTrace);
             }, Throwable::printStackTrace);
-            Statistics.totalEvents++;
-            Statistics.totalSeminarEvents++;
-            Statistics.eventsAdded++;
         }
     }
 

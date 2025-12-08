@@ -1,23 +1,38 @@
 package org.example.planifyfx.util;
 
-import org.example.planifyfx.model.Event;
 import org.example.planifyfx.repository.EventRepository;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+/**
+ * Utility class for retrieving event statistics.
+ * All statistics are calculated live from the database.
+ */
 public class Statistics {
 
-    public static int totalEvents = EventRepository.getTotalEventsCount();
+    /**
+     * Gets the total number of events in the system.
+     */
+    public static int getTotalEvents() {
+        return EventRepository.getTotalEventsCount();
+    }
 
-    public static int totalWeddingEvents = EventRepository.getWeddingEventsCount();
+    /**
+     * Gets the number of wedding events.
+     */
+    public static int getTotalWeddingEvents() {
+        return EventRepository.getWeddingEventsCount();
+    }
 
-    public static int totalBirthdayEvents = EventRepository.getBirthdayEventsCount();
+    /**
+     * Gets the number of birthday events.
+     */
+    public static int getTotalBirthdayEvents() {
+        return EventRepository.getBirthdayEventsCount();
+    }
 
-    public static int totalSeminarEvents = EventRepository.getSeminarEventsCount();
-
-    public static int eventsAdded = 0;
-
-
+    /**
+     * Gets the number of seminar events.
+     */
+    public static int getTotalSeminarEvents() {
+        return EventRepository.getSeminarEventsCount();
+    }
 }
-

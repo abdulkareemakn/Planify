@@ -1,46 +1,45 @@
 package org.example.planifyfx.model;
 
-import java.util.Random;
-import java.util.Scanner;
+import java.time.LocalDateTime;
 
-import org.example.planifyfx.util.EventInfo;
-
+/**
+ * Represents a wedding event with specific details like bride/groom names
+ * and whether a photographer is required.
+ */
 public class WeddingEvent extends Event {
+    
     private String brideName;
     private String groomName;
     private boolean photographerRequired;
 
-    public WeddingEvent(
-            EventInfo eventInfo, String brideName, String groomName, boolean photographerRequired) {
-        super(eventInfo);
-        setBrideName(brideName);
-        setGroomName(groomName);
-        setPhotographerRequired(photographerRequired);
+    /**
+     * Creates a new Wedding Event.
+     * 
+     * @param name Event name
+     * @param dateTime Date and time of the event
+     * @param attendance Expected number of attendees
+     * @param client The client booking the event
+     * @param brideName Name of the bride
+     * @param groomName Name of the groom
+     * @param photographerRequired Whether a photographer is needed
+     */
+    public WeddingEvent(String name, LocalDateTime dateTime, int attendance, Client client,
+                        String brideName, String groomName, boolean photographerRequired) {
+        super(name, dateTime, attendance, client);
+        this.brideName = brideName;
+        this.groomName = groomName;
+        this.photographerRequired = photographerRequired;
         this.eventType = "Wedding";
     }
 
-    public static WeddingEvent promptForEventDetails() {
-        Scanner scanner = new Scanner(System.in);
-
-        EventInfo eventInfo = EventInfo.collectBasicInfo();
-
-        System.out.print("What is the name of the bride?");
-        String brideName = scanner.nextLine();
-        System.out.print("What is the name of the groom?");
-        String groomName = scanner.nextLine();
-
-        boolean photographerRequired;
-        String temp;
-
-        do {
-            System.out.print("Is a photographer required? (true/false)");
-            temp = scanner.nextLine().trim().toLowerCase();
-        } while (!temp.equals("true") && !temp.equals("false"));
-
-        photographerRequired = Boolean.parseBoolean(temp);
-
-        return new WeddingEvent(eventInfo, brideName, groomName, photographerRequired);
+    /**
+     * Default constructor for loading from database.
+     */
+    public WeddingEvent() {
+        this.eventType = "Wedding";
     }
+
+    // Getters and Setters
 
     public String getBrideName() {
         return brideName;
@@ -68,7 +67,6 @@ public class WeddingEvent extends Event {
 
     @Override
     public String toString() {
-        return String.format("Name: %s, Attendance: %d, Client: %s, Event Type: Wedding", this.name,
-                this.attendance, this.client.name);
+        return String.format("Wedding Event: %s (Bride: %s, Groom: %s)", name, brideName, groomName);
     }
 }

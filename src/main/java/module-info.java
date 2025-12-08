@@ -2,7 +2,6 @@ module org.example.planifyfx {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
-    requires com.zaxxer.hikari;
 
     exports org.example.planifyfx.model;
     exports org.example.planifyfx.repository;

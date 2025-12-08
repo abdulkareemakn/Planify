@@ -1,67 +1,72 @@
 package org.example.planifyfx.model;
 
-import java.util.Random;
-import java.util.Scanner;
-import org.example.planifyfx.repository.EventRepository;
-import org.example.planifyfx.util.EventInfo;
+import java.time.LocalDateTime;
 
+/**
+ * Represents a birthday event with specific details like age, theme,
+ * and number of kids attending.
+ */
 public class BirthdayEvent extends Event {
-  private int age;
-  private String theme;
-  private int numberOfKids;
+    
+    private int age;
+    private String theme;
+    private int numberOfKids;
 
-  public BirthdayEvent(EventInfo eventInfo, int age, String theme, int numberOfKids) {
-    super(eventInfo);
-    this.age = age;
-    this.theme = theme;
-    this.numberOfKids = numberOfKids;
-    this.eventType = "Birthday";
-  }
+    /**
+     * Creates a new Birthday Event.
+     * 
+     * @param name Event name
+     * @param dateTime Date and time of the event
+     * @param attendance Expected number of attendees
+     * @param client The client booking the event
+     * @param age Age of the person being celebrated
+     * @param theme Party theme
+     * @param numberOfKids Number of children attending
+     */
+    public BirthdayEvent(String name, LocalDateTime dateTime, int attendance, Client client,
+                         int age, String theme, int numberOfKids) {
+        super(name, dateTime, attendance, client);
+        this.age = age;
+        this.theme = theme;
+        this.numberOfKids = numberOfKids;
+        this.eventType = "Birthday";
+    }
 
-  public static BirthdayEvent promptForEventDetails() {
-    Scanner scanner = new Scanner(System.in);
+    /**
+     * Default constructor for loading from database.
+     */
+    public BirthdayEvent() {
+        this.eventType = "Birthday";
+    }
 
-    EventInfo eventInfo = EventInfo.collectBasicInfo();
+    // Getters and Setters
 
-    System.out.println("What is the age of the person being celebrated?");
-    int age = scanner.nextInt();
-    scanner.nextLine();
-    System.out.println("What is the theme of the event?");
-    String theme = scanner.nextLine();
-    System.out.println("How many kids are attending?");
-    int numberOfKids = scanner.nextInt();
-    scanner.nextLine();
+    public int getAge() {
+        return age;
+    }
 
-    return new BirthdayEvent(eventInfo, age, theme, numberOfKids);
-  }
+    public void setAge(int age) {
+        this.age = age;
+    }
 
-  @Override
-  public String toString() {
-    return String.format("Name: %s, Attendance: %d, Client: %s, Event Type: Birthday Party",
-        this.name, this.attendance, this.client.name);
-  }
+    public String getTheme() {
+        return theme;
+    }
 
-  public int getAge() {
-    return age;
-  }
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
 
-  public void setAge(int age) {
-    this.age = age;
-  }
+    public int getNumberOfKids() {
+        return numberOfKids;
+    }
 
-  public String getTheme() {
-    return theme;
-  }
+    public void setNumberOfKids(int numberOfKids) {
+        this.numberOfKids = numberOfKids;
+    }
 
-  public void setTheme(String theme) {
-    this.theme = theme;
-  }
-
-  public int getNumberOfKids() {
-    return numberOfKids;
-  }
-
-  public void setNumberOfKids(int numberOfKids) {
-    this.numberOfKids = numberOfKids;
-  }
+    @Override
+    public String toString() {
+        return String.format("Birthday Event: %s (Age: %d, Theme: %s)", name, age, theme);
+    }
 }

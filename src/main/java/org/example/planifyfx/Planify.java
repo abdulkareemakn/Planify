@@ -1,74 +1,75 @@
 package org.example.planifyfx;
 
-import org.example.planifyfx.deps.DBConnectionPool;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.example.planifyfx.controller.DashboardController;
-import org.example.planifyfx.repository.EventRepository;
-import org.example.planifyfx.util.DatabaseUtil;
+import org.example.planifyfx.util.DatabaseHelper;
 import org.example.planifyfx.util.SceneManager;
-import org.example.planifyfx.util.Statistics;
 
 import java.io.IOException;
-import java.net.URL;
-import java.sql.PreparedStatement;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.sql.Connection;
 import java.sql.Statement;
 
+/**
+ * Main application class for Planify - an Event Management System.
+ * This class initializes the database and starts the JavaFX application.
+ */
 public class Planify extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-
+        // Initialize the SceneManager with the primary stage
         SceneManager.getInstance().setPrimaryStage(stage);
 
-        stage.setTitle("Planify");
-        stage.setWidth(1920);
-        stage.setHeight(1080);
+        // Configure the main window
+        stage.setTitle("Planify - Event Management System");
+        stage.setWidth(1280);
+        stage.setHeight(720);
 
+        // Start with the login page
         SceneManager.getInstance().switchScene("LoginPage.fxml");
     }
 
-
     public static void main(String[] args) {
+        // Initialize database before launching the app
+        initializeDatabase();
+        
+        // Launch the JavaFX application
+        launch(args);
+    }
 
-        new DatabaseUtil();
-        launch();
-
-
-        DashboardController dashboardController = new DashboardController();
-
-        try (java.sql.Connection conn = DatabaseUtil.getConnection();
-        ) {
-
-            String sql = """
-                    DROP TABLE statistics;
-                    CREATE TABLE IF NOT EXISTS statistics ( 
-                    total_events INTEGER, 
-                    total_wedding_events INTEGER, 
-                    total_birthday_events INTEGER,
-                    total_seminar_events INTEGER 
-                    );
-                    """;
-
-            Statement stmt = conn.createStatement();
-            stmt.executeUpdate(sql);
-
-            String insertData = "INSERT INTO statistics (total_events, total_wedding_events, total_birthday_events, total_seminar_events) VALUES (?, ?, ?, ?);";
-
-            PreparedStatement pstmt = conn.prepareStatement(insertData);
-            pstmt.setInt(1, Statistics.totalEvents);
-            pstmt.setInt(2, Statistics.totalWeddingEvents);
-            pstmt.setInt(3, Statistics.totalBirthdayEvents);
-            pstmt.setInt(4, Statistics.totalSeminarEvents);
-
-            pstmt.executeUpdate();
-
+    /**
+     * Initializes the database by creating the necessary tables.
+     * This runs the schema.sql file to set up the database structure.
+     */
+    private static void initializeDatabase() {
+        try {
+            // Ensure the db directory exists
+            Files.createDirectories(Paths.get("db"));
+            
+            // Read and execute the schema
+            String schemaPath = "src/main/resources/org/example/planifyfx/db/schema.sql";
+            String schema = Files.readString(Paths.get(schemaPath));
+            
+            try (Connection conn = DatabaseHelper.getConnection();
+                 Statement stmt = conn.createStatement()) {
+                
+                // SQLite doesn't support multiple statements in one execute
+                // So we split by semicolon and execute each statement
+                String[] statements = schema.split(";");
+                for (String sql : statements) {
+                    sql = sql.trim();
+                    if (!sql.isEmpty()) {
+                        stmt.execute(sql);
+                    }
+                }
+                
+                System.out.println("Database initialized successfully.");
+            }
         } catch (Exception e) {
+            System.err.println("Failed to initialize database: " + e.getMessage());
             e.printStackTrace();
         }
-
     }
 }

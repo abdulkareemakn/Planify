@@ -5,18 +5,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.HBox;
-import javafx.geometry.Insets;
 import org.example.planifyfx.util.SceneManager;
 import org.example.planifyfx.util.Statistics;
 
 import java.net.URL;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.ResourceBundle;
 
-
+/**
+ * Controller for the Dashboard screen.
+ * Displays event statistics and provides navigation to other screens.
+ */
 public class DashboardController implements Initializable {
 
     @FXML
@@ -38,51 +36,38 @@ public class DashboardController implements Initializable {
     @FXML
     private VBox recentEventsContainer;
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         loadDashboardData();
-
         setActiveNavButton(dashboardBtn);
     }
 
+    /**
+     * Loads all dashboard data including statistics.
+     */
     private void loadDashboardData() {
-        loadGeneralStatistics();
-        loadEventTypeStatistics();
+        loadStatistics();
     }
 
-    private void loadGeneralStatistics() {
-        totalEventsLabel.setText(String.valueOf(Statistics.totalEvents));
-    }
-
-    private void loadEventTypeStatistics() {
-        weddingEventsLabel.setText(String.valueOf(Statistics.totalWeddingEvents));
-        birthdayEventsLabel.setText(String.valueOf(Statistics.totalBirthdayEvents));
-        seminarEventsLabel.setText(String.valueOf(Statistics.totalSeminarEvents));
-    }
-
-    private HBox createEventRow(String eventInfo) {
-        HBox row = new HBox(10);
-        row.setStyle("-fx-padding: 8; -fx-background-color: #f8f9fa; -fx-background-radius: 4;");
-
-        Label eventLabel = new Label(eventInfo);
-        Label dateLabel = new Label("Date: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMM dd, yyyy")));
-        dateLabel.setStyle("-fx-text-fill: #666666; -fx-font-size: 12px;");
-
-        row.getChildren().addAll(eventLabel, dateLabel);
-        return row;
+    /**
+     * Loads event statistics from the database and updates the labels.
+     */
+    private void loadStatistics() {
+        totalEventsLabel.setText(String.valueOf(Statistics.getTotalEvents()));
+        weddingEventsLabel.setText(String.valueOf(Statistics.getTotalWeddingEvents()));
+        birthdayEventsLabel.setText(String.valueOf(Statistics.getTotalBirthdayEvents()));
+        seminarEventsLabel.setText(String.valueOf(Statistics.getTotalSeminarEvents()));
     }
 
     @FXML
     private void showDashboard() {
         setActiveNavButton(dashboardBtn);
+        loadDashboardData();
     }
 
     @FXML
     private void showEvents() {
         setActiveNavButton(eventsBtn);
-
         try {
             SceneManager.getInstance().switchScene("Events.fxml");
         } catch (Exception e) {
@@ -94,7 +79,6 @@ public class DashboardController implements Initializable {
     @FXML
     private void addNewEvent() {
         setActiveNavButton(addEventBtn);
-
         try {
             SceneManager.getInstance().switchScene("CreateEvent.fxml");
         } catch (Exception e) {
@@ -103,13 +87,21 @@ public class DashboardController implements Initializable {
         }
     }
 
+    /**
+     * Updates the visual style of navigation buttons to show which is active.
+     */
     private void setActiveNavButton(Button activeButton) {
-        dashboardBtn.setStyle("-fx-background-color: #34495e; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 4;");
-        eventsBtn.setStyle("-fx-background-color: #34495e; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 4;");
-
-        activeButton.setStyle("-fx-background-color: #2980b9; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 4;");
+        String inactiveStyle = "-fx-background-color: #34495e; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 4;";
+        String activeStyle = "-fx-background-color: #2980b9; -fx-text-fill: white; -fx-padding: 8 16; -fx-background-radius: 4;";
+        
+        dashboardBtn.setStyle(inactiveStyle);
+        eventsBtn.setStyle(inactiveStyle);
+        activeButton.setStyle(activeStyle);
     }
 
+    /**
+     * Refreshes the dashboard data. Called when returning from other screens.
+     */
     public void refreshDashboard() {
         loadDashboardData();
     }
